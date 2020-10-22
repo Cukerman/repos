@@ -1,5 +1,5 @@
 from menuItem import Menu_item
-from simpleMenuItem import Simple_menu_item
+from simpleMenu import Simple_menu_item
 
 
 class Menu(Menu_item):
