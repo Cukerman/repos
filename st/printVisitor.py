@@ -6,7 +6,7 @@ class BriefPrintVisitor():
         self.__students = True
   
     def visit_student(self, n, student): 
-        print(f'===={n+1}====')
+        print(f"{n+1}. ", end="")
         student.printShort()
         self.__students = False
  

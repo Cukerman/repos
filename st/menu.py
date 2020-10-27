@@ -7,13 +7,23 @@ class Menu(Menu_item):
         super().__init__(title)  
         self.__list = []
         self.__f = f
+        self.select = 1 
+        self.show = 1
+        self.deselect = 1
+
     def run(self):
+        if self.select != 1:
+            self.select()
         while True:
+            if self.show != 1:
+                self.show()
             self.pri()                
             x = self.inp()            
             if x == len(self.__list)+1:                
                 break
             self.__list[x-1].run()
+        if self.deselect != 1:
+            self.deselect()
     def pri(self):
         for i in range(len(self.__list)):
                 print(f'{i+1}.{self.__list[i].get_title()}')
@@ -45,4 +55,12 @@ class Menu(Menu_item):
                 print("Error") 
                                
         return x
+    
+    
 
+    def Select(self,h):
+        self.select = h
+    def Show(self,h):
+        self.show = h
+    def Deselect(self,h):
+        self.deselect = h

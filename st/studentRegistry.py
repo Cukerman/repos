@@ -7,7 +7,7 @@ class Singleton(type):
     def __call__(cls, *args, **kwargs):
         if cls not in cls.instances:
             cls.instances[cls] = super().__call__(*args, **kwargs)
-            return cls.instances[cls]
+        return cls.instances[cls]
 
 class StudentRegistry(metaclass=Singleton):
     def __init__(self):
@@ -16,14 +16,14 @@ class StudentRegistry(metaclass=Singleton):
     def addStudents(self, student):
         self.__students.append(student)
 
-    def removeStudentsNumber(self,number):
-        del self.__students[number-1]
+    def removeStudentsNumber(self,n):
+        del self.__students[n]
 
-    def removeStudents(self,student):
-        self.__students.remove(student)
+    def removeStudents(self,n):
+        self.__students.remove(n)
 
-    def getStudent(self,number):
-        return self.__students[number-1]
+    def getStudent(self,n):
+        return self.__students[n]
 
     def getStudentsCount(self):
         return len(self.__students)
@@ -35,4 +35,3 @@ class StudentRegistry(metaclass=Singleton):
             visitor.visit_student(i, student)
         
         visitor.finish_visit()
-

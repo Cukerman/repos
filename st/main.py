@@ -5,8 +5,13 @@ from studentRegistry import StudentRegistry
 from student import Student
 from achieverVisitor import (
     LowArchieverVisitor,
-    HightArchieverVisitor)
-from printVisitor import (BriefPrintVisitor,DetailedPrintVisitor)
+    HightArchieverVisitor
+    )
+from printVisitor import (
+    BriefPrintVisitor,
+    DetailedPrintVisitor
+    )
+from edit import Edit
 
 def showHighAchiversCommand():
     studentRegistry.visit_students(HightArchieverVisitor())
@@ -14,10 +19,91 @@ def showLowArchiversCommand():
     studentRegistry.visit_students(LowArchieverVisitor())
 def listStudentCommand():
     studentRegistry.visit_students(DetailedPrintVisitor())
-def addStudentCommand():
-    
+def addStudent():   
     studentRegistry.addStudents(Student(input('Введите Фамилию: '),input('Введите Имя: '),input('Введите Отчество: '),input('Введите группу: ')))
+def removeStudent():
+    studentRegistry.visit_students(BriefPrintVisitor()) 
+    if StudentRegistry().getStudentsCount() != 0:
+        while True: 
+            n = int(input('Введите номер ученика '))-1
+            if StudentRegistry().getStudentsCount()> n>=0:
+                break
+            print ('error')
+        while True:    
+            p = input(f'Удалить ученика {n+1}?\n1.Да\n2.нет\n')
+            if p=='2' or p == '1' or p== 'да' or p== 'Да' or p=='Нет' or p== 'нет':
+                break
+            else:    
+                print ('error')
+        if p == '1' or p== 'да' or p== 'Да':
+            StudentRegistry().removeStudentsNumber(n-1) 
+            print('Вы удалили студента')
+       
+def SelectS():
+    studentRegistry.visit_students(BriefPrintVisitor()) 
+    while True: 
+        n = int(input('Введите номер ученика '))-1
+        if StudentRegistry().getStudentsCount()> n>=0:
+            break
+        print ('error')
+    Edit().student = StudentRegistry().getStudent(n)
+def ShowS():
+    Edit().student.printLong()
+def DeselectS():
+    Edit().student = None
 
+def EditF() :
+    Edit().student.first_name = input('Введите Имя: ')
+def EditL():
+    Edit().student.last_name = input('Введите Фамиллию: ')
+def EditM():
+    Edit().student.middle_name = input('Введите Отчество: ')
+def EditG():
+    Edit().student.group = input('Введите Группу: ')
+def EditMark():
+    if len(Edit().student.marks) == 0:
+        print('Оценок нет')
+    else:
+        Edit().student.printSubjects()
+        y=0
+        while y!=1:
+            n = input('Введите название предмета: ')
+            for key,y in Edit().student.marks.items():            
+                if n == key:
+                    y=1
+                    break
+            if y!=1:    
+                print('Такого предмета нет')
+        Edit().student.marks[n] = int(input('Введите оценку: '))
+      
+def AddMark():
+    с=input('Введите название предмета: ')
+    Edit().student.marks[с] = int(input('Введите оценку: '))
+def RemoveMark():
+    if len(Edit().student.marks) == 0:
+        print('Оценок нет')
+    else:
+        Edit().student.printSubjects()
+        y=0
+        while y!=1:
+            n = input('Введите название предмета: ')
+            for key,y in Edit().student.marks.items():            
+                if n == key:
+                    y=1
+                    break
+            if y!=1:    
+                print('Такого предмета нет')
+        while True:    
+            p = input(f'Удалить оценку {n}?\n1.Да\n2.нет\n')
+            if p=='2' or p == '1' or p== 'да' or p== 'Да' or p=='Нет' or p== 'нет':
+                break
+            else:    
+                print ('error')
+        if p == '1' or p== 'да' or p== 'Да':
+            del Edit().student.marks[n]
+            print('Вы удалили оценку')
+        
+    pass
 def test():
     print('Hello World')
 if __name__ == '__main__':
@@ -29,25 +115,28 @@ if __name__ == '__main__':
     studentRegistry.addStudents(student1)
     studentRegistry.addStudents(student2)
 
-main_menu = Menu()
+    main_menu = Menu()
 
-file_menu = main_menu.addItems('Список студентов',listStudentCommand)
-file_menu = main_menu.addItems('Добавить студента',addStudentCommand)
-file_menu = main_menu.addSubMenu('Редактировать студента')
+    file_menu = main_menu.addItems('Список студентов',listStudentCommand)
+    file_menu = main_menu.addItems('Добавить студента',addStudent)
+    file_menu = main_menu.addSubMenu('Редактировать студента')
+    file_menu.Select(SelectS)
+    file_menu.Show(ShowS)
+    file_menu.Deselect(DeselectS)
+    file_menu.addItems('Изменить фамилию', EditL)
+    file_menu.addItems('Изменить имя', EditF)
+    file_menu.addItems('Изменить отчество', EditM)
+    file_menu.addItems('Изменить группу', EditG)
+    file_menu.addItems('Добавить оценку', AddMark)
+    file_menu.addItems('Изменить оценку', EditMark)
+    file_menu.addItems('Удалить оценку', RemoveMark)
+    
 
-file_menu.addItems('Изменить фамилию', test)
-file_menu.addItems('Изменить имя', test)
-file_menu.addItems('Изменить отчество', test)
-file_menu.addItems('Изменить группу', test)
-file_menu.addItems('Добавить оценку', test)
-file_menu.addItems('Изменить оценку', test)
-file_menu.addItems('Удалить оценку', test)
+    file_menu = main_menu.addItems('Удалить студента',removeStudent)
 
-file_menu = main_menu.addItems('Удалить студента',test)
-
-file_menu = main_menu.addItems('Показать отличников',showHighAchiversCommand)
-file_menu = main_menu.addItems('Показать неуспевающих',showLowArchiversCommand)
+    file_menu = main_menu.addItems('Показать отличников',showHighAchiversCommand)
+    file_menu = main_menu.addItems('Показать неуспевающих',showLowArchiversCommand)
 
 
 
-main_menu.run()
+    main_menu.run()
