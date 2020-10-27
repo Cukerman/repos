@@ -9,4 +9,4 @@ class Edit(metaclass=Singleton):
 
     def __init__(self):
 
-        self.student = None
+        self.student = 1
