@@ -1,7 +1,6 @@
 from student import Student
 
 
-
 class Singleton(type):
     instances = {}
     def __call__(cls, *args, **kwargs):
@@ -35,3 +34,7 @@ class StudentRegistry(metaclass=Singleton):
             visitor.visit_student(i, student)
         
         visitor.finish_visit()
+
+class Edit(metaclass=Singleton):
+    def __init__(self):
+        self.student = 1

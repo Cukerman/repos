@@ -1,30 +1,35 @@
 from menuItem import Menu_item
 from simpleMenu import Simple_menu_item
-
+from studentRegistry import StudentRegistry
 
 class Menu(Menu_item):
     def __init__(self,title = '',f = True):    
         super().__init__(title)  
         self.__list = []
         self.__f = f
-        self.select = 1 
-        self.show = 1
-        self.deselect = 1
+        self.select = None 
+        self.show = None
+        self.deselect = None
 
-    def run(self):
-        if self.select != 1:
+    def run(self):   
+        n=StudentRegistry().getStudentsCount()
+        if self.select != None :
             self.select()
         while True:
-            if self.show != 1:
-                self.show()
-            self.pri()                
-            x = self.inp()            
-            if x == len(self.__list)+1:                
+            if self.show != None :
+                self.show()           
+            if n==0 and self.__f==False:
                 break
+            else:
+                self.pri()                 
+                x = self.inp()         
+            if x == len(self.__list)+1    :             
+                break
+            
             self.__list[x-1].run()
-        if self.deselect != 1:
+        if self.deselect != None :
             self.deselect()
-    def pri(self):
+    def pri(self):             
         for i in range(len(self.__list)):
                 print(f'{i+1}.{self.__list[i].get_title()}')
         if self.__f :

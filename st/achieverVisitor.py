@@ -1,11 +1,16 @@
 from studentVisit import StudentVisitor
-
+from studentRegistry import StudentRegistry
 class HightArchieverVisitor():
     def start_visit(self):
-        self.__has_students = True
+        self.__students = True
 
     def visit_student(self, number, student):       
-        if sum(list(student.marks.values()))/len(list(student.marks.values())) == 5:
+        c=0
+        k=0
+        for mark in list(student.marks.values()):
+            c+=mark
+            k+=1
+        if c == k*5 and c!=0:
             print(f'===={number+1}====')
             student.printLong() 
             self.__students = False
