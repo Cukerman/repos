@@ -1,12 +1,7 @@
 from student import Student
+from singl import Singleton
 
 
-class Singleton(type):
-    instances = {}
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls.instances:
-            cls.instances[cls] = super().__call__(*args, **kwargs)
-        return cls.instances[cls]
 
 class StudentRegistry(metaclass=Singleton):
     def __init__(self):
@@ -34,7 +29,3 @@ class StudentRegistry(metaclass=Singleton):
             visitor.visit_student(i, student)
         
         visitor.finish_visit()
-
-class Edit(metaclass=Singleton):
-    def __init__(self):
-        self.student = 1
