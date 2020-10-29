@@ -1,7 +1,8 @@
 from menu import Menu
 from simpleMenu import Simple_menu_item
 from menuItem import Menu_item
-from studentRegistry import StudentRegistry,Edit
+from studentRegistry import StudentRegistry
+from edit import Edit
 from student import Student
 from achieverVisitor import (
     LowArchieverVisitor,
@@ -107,10 +108,10 @@ def test():
 if __name__ == '__main__':
     studentRegistry = StudentRegistry()
     # student = Student('Иванов','Иван','Иванович','34',{'химия': 5,'математика':5})
-    # student1 = Student('Потапов','Игрорь','Владимирович','32',{'физика':3,'информатика':5})
+    student1 = Student('Потапов','Игрорь','Владимирович','32',{'физика':3,'информатика':5})
     # student2 = Student('Максимов','Максим','Максимович','11',{'физика':4,'информатика':4})
     # studentRegistry.addStudents(student)
-    # studentRegistry.addStudents(student1)
+    studentRegistry.addStudents(student1)
     # studentRegistry.addStudents(student2)
     n=StudentRegistry().getStudentsCount()
     main_menu = Menu()
