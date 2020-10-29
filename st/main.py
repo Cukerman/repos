@@ -48,7 +48,8 @@ def SelectS():
                 break
             print ('error')
         Edit().student = StudentRegistry().getStudent(n)
-    
+    else:
+        return True
         
 def ShowS():
     if StudentRegistry().getStudentsCount()!=0:    
@@ -106,10 +107,10 @@ def test():
 if __name__ == '__main__':
     studentRegistry = StudentRegistry()
     # student = Student('Иванов','Иван','Иванович','34',{'химия': 5,'математика':5})
-    student1 = Student('Потапов','Игрорь','Владимирович','32',{'физика':3,'информатика':5})
+    # student1 = Student('Потапов','Игрорь','Владимирович','32',{'физика':3,'информатика':5})
     # student2 = Student('Максимов','Максим','Максимович','11',{'физика':4,'информатика':4})
     # studentRegistry.addStudents(student)
-    studentRegistry.addStudents(student1)
+    # studentRegistry.addStudents(student1)
     # studentRegistry.addStudents(student2)
     n=StudentRegistry().getStudentsCount()
     main_menu = Menu()

@@ -1,6 +1,6 @@
 from menuItem import Menu_item
 from simpleMenu import Simple_menu_item
-from studentRegistry import StudentRegistry
+
 
 class Menu(Menu_item):
     def __init__(self,title = '',f = True):    
@@ -12,20 +12,19 @@ class Menu(Menu_item):
         self.deselect = None
 
     def run(self):   
-        n=StudentRegistry().getStudentsCount()
+        n=False
         if self.select != None :
-            self.select()
+            n=self.select()
         while True:
             if self.show != None :
                 self.show()           
-            if n==0 and self.__f==False:
+            if n:
                 break
             else:
                 self.pri()                 
                 x = self.inp()         
             if x == len(self.__list)+1    :             
-                break
-            
+                break            
             self.__list[x-1].run()
         if self.deselect != None :
             self.deselect()
