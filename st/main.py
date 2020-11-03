@@ -12,7 +12,7 @@ from printVisitor import (
     BriefPrintVisitor,
     DetailedPrintVisitor
     ) 
-import json
+
 
 def showHighAchiversCommand():
     studentRegistry.visit_students(HightArchieverVisitor())
@@ -22,7 +22,7 @@ def listStudentCommand():
     studentRegistry.visit_students(DetailedPrintVisitor())
 def addStudent():   
     studentRegistry.addStudents(Student(input('Введите Фамилию: '),input('Введите Имя: '),input('Введите Отчество: '),input('Введите группу: ')))
-    save()
+    studentRegistry.save()
 def removeStudent():
     studentRegistry.visit_students(BriefPrintVisitor()) 
     if StudentRegistry().getStudentsCount() != 0:
@@ -40,7 +40,7 @@ def removeStudent():
         if p == '1' or p== 'да' or p== 'Да':
             StudentRegistry().removeStudentsNumber(n-1) 
             print('Вы удалили студента')
-            save()
+            studentRegistry.save()
 def SelectS():
     if StudentRegistry().getStudentsCount()!=0:
         studentRegistry.visit_students(BriefPrintVisitor()) 
@@ -56,7 +56,7 @@ def SelectS():
 def ShowS():
     if StudentRegistry().getStudentsCount()!=0:    
         Edit().student.printLong()
-        save()    
+        studentRegistry.save()    
     else:
         test()
 def DeselectS():
@@ -107,26 +107,6 @@ def test():
     print('Студентов нет')
 
 
-def save():
-    person = []
-    for i in range(studentRegistry.getStudentsCount()):
-        p=studentRegistry.getStudent(i)
-        P=[]
-        P.append(p.last_name)
-        P.append(p.first_name)
-        P.append(p.middle_name)
-        P.append(p.group)
-        P.append(p.marks)   
-        person.append(P)
-    with open('students.json','w') as f:
-        json.dump(person, f)
-
-def load():
-    with open('students.json','r') as f:
-        f=json.load(f)
-        for i in range(0,len(f)):
-            studentRegistry.addStudents(Student(f[i][0],f[i][1],f[i][2],f[i][3],f[i][4]))
-
 
 
 if __name__ == '__main__':
@@ -137,7 +117,7 @@ if __name__ == '__main__':
     # studentRegistry.addStudents(student)
     # studentRegistry.addStudents(student1)
     # studentRegistry.addStudents(student2)
-    load()
+    studentRegistry.load()
     main_menu = Menu()
 
     file_menu = main_menu.addItems('Список студентов',listStudentCommand)
@@ -166,4 +146,4 @@ if __name__ == '__main__':
 
 
     main_menu.run()
-    save()
+    studentRegistry.save()
