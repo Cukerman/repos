@@ -15,14 +15,14 @@ from printVisitor import (
 
 
 def showHighAchiversCommand():
-    studentRegistry.visit_students(HightArchieverVisitor())
+    StudentRegistry().visit_students(HightArchieverVisitor())
 def showLowArchiversCommand():
-    studentRegistry.visit_students(LowArchieverVisitor())
+    StudentRegistry().visit_students(LowArchieverVisitor())
 def listStudentCommand():
-    studentRegistry.visit_students(DetailedPrintVisitor())
+    StudentRegistry().visit_students(DetailedPrintVisitor())
 def addStudent():   
-    studentRegistry.addStudents(Student(input('Введите Фамилию: '),input('Введите Имя: '),input('Введите Отчество: '),input('Введите группу: ')))
-    studentRegistry.save()
+    StudentRegistry().addStudents(Student(input('Введите Фамилию: '),input('Введите Имя: '),input('Введите Отчество: '),input('Введите группу: ')))
+    StudentRegistry().save()
 def removeStudent():
     studentRegistry.visit_students(BriefPrintVisitor()) 
     if StudentRegistry().getStudentsCount() != 0:
@@ -56,8 +56,7 @@ def SelectS():
 def ShowS():
     if StudentRegistry().getStudentsCount()!=0:    
         Edit().student.printLong()
-        studentRegistry.save()    
-    else:
+        StudentRegistry().save()    
         test()
 def DeselectS():
     if StudentRegistry().getStudentsCount()!=0:
