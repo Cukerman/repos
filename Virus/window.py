@@ -3,10 +3,11 @@ from pygame.locals import *
 from virus import Virus
 from bacterium import Bacterium
 import random
+from simulation import Simulation
 
 class Window:
 
-    def __init__(self, width=640, height=480, cell=2, speed=10,virus=Virus(), bacterium=Bacterium()) :
+    def __init__(self, width=640, height=480, cell=2, speed=10) :
         self.width = width
         self.height = height
         self.cell = cell
@@ -16,8 +17,7 @@ class Window:
         self.cell_height = self.height // self.cell
         self.cells = self.cell_width*self.cell_height
         self.speed = speed
-        self.v = virus
-        self.b = bacterium
+        self.s =  Simulation()
     def draw_lines(self) :  
         self.screen.fill(pygame.Color('white'))
         for x in range(0, self.width, self.cell):
@@ -27,39 +27,40 @@ class Window:
             pygame.draw.line(self.screen, pygame.Color('black'), 
                 (0, y), (self.width, y))
     def print(self):                  
-        for i in self.v.get():
-            y=i[1]*self.cell
-            if i[0]==0:
+        for i in self.s.getItems():
+            f=i.get()
+            y=f[1]*self.cell
+            if f[0]==0:
                 x=self.width-self.cell
                 y-=self.cell
             else:    
-                x=i[0]*self.cell-self.cell    
-            pygame.draw.rect(self.screen, pygame.Color('green'),
+                x=f[0]*self.cell-self.cell    
+            pygame.draw.rect(self.screen, pygame.Color(i.color()),
             (x+1,y+1,self.cell-1,self.cell-1))
-        for i in self.b.get():
-            y=i[1]*self.cell
-            if i[0]==0:
-                x=self.width-self.cell
-                y-=self.cell
-            else:    
-                x=i[0]*self.cell-self.cell    
-            pygame.draw.rect(self.screen, pygame.Color('red'),
-            (x+1,y+1,self.cell-1,self.cell-1))   
+        # for i in self.b.get():
+        #     y=f[1]*self.cell
+        #     if i[0]==0:
+        #         x=self.width-self.cell
+        #         y-=self.cell
+        #     else:    
+        #         x=f[0]*self.cell-self.cell    
+        #     pygame.draw.rect(self.screen, pygame.Color('red'),
+        #     (x+1,y+1,self.cell-1,self.cell-1))   
 
-    def step(self):
-        if self.v.len()==0:
-            return
-        for i in self.v.get():
-            c=[]
-            c.append(i[0])
-            c.append(i[1])
-            self.v.step(i,self.cell_width,self.cell_height)
+    # def step(self):
+    #     if self.v.len()==0:
+    #         return
+    #     for i in self.v.get():
+    #         c=[]
+    #         c.append(i[0])
+    #         c.append(i[1])
+    #         self.v.step(i,self.cell_width,self.cell_height)
             
             # if self.v.search(c) and self.b.search(c):
             #     self.v.edit(c)
             
-            if random.randint(0,101)<=10:
-                self.v.edit(c)
+    #         if random.randint(0,101)<=10:
+    #             self.v.edit(c)
 
             
            
@@ -71,7 +72,7 @@ class Window:
 
         running = True
         
-        b=Bacterium()
+        
         while running:
             clock.tick(self.speed)
             for event in pygame.event.get():
@@ -83,27 +84,21 @@ class Window:
                     print (x,y,'координаты')
                     print((x//self.cell),(y//self.cell),'квадратик')
                     if event.button==1:
-                        s=[(x//self.cell)+1,y//self.cell]
-                        if self.b.search(s):    
-                            self.v.edit(s)
-                            print('зел')
+                        s=[(x//self.cell)+1,y//self.cell]                            
+                        self.s.add(Virus((x//self.cell)+1,y//self.cell))
+                        print('зел')
                     elif event.button==3:
-                        s=[(x//self.cell)+1,y//self.cell]
-                        if self.v.search(s):
-                            self.b.edit(s)
-                            print('крас')
+                        self.s.add(Bacterium((x//self.cell)+1,y//self.cell))
+                        print('крас')
                     elif event.button==2:
                         s=[(x//self.cell)+1,y//self.cell]    
-                        if not self.v.search(s):
-                            self.v.dell(s)
-                        elif not self.b.search(s):
-                            self.b.dell(s)
+                        
                 # elif event.type==pygame.KEYDOWN:
                 #     if event.key==K_p:
                         
             self.draw_lines()
             self.print()
-            self.step()
+            # self.step()
             pygame.display.flip()
                 
 

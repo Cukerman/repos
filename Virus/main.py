@@ -7,7 +7,7 @@ from bacterium import Bacterium
           
 
 if __name__ == '__main__':
-    v=Virus()
+    
     width=640
     height=480
     cell_size=20
