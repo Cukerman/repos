@@ -1,10 +1,12 @@
 import pygame
 from pygame.locals import *
 from virus import Virus
+from bacterium import Bacterium
+import random
 
 class Window:
 
-    def __init__(self, width=640, height=480, cell=10, speed=10) :
+    def __init__(self, width=640, height=480, cell=2, speed=10,virus=Virus(), bacterium=Bacterium()) :
         self.width = width
         self.height = height
         self.cell = cell
@@ -14,67 +16,95 @@ class Window:
         self.cell_height = self.height // self.cell
         self.cells = self.cell_width*self.cell_height
         self.speed = speed
-
+        self.v = virus
+        self.b = bacterium
     def draw_lines(self) :  
+        self.screen.fill(pygame.Color('white'))
         for x in range(0, self.width, self.cell):
             pygame.draw.line(self.screen, pygame.Color('black'), 
                 (x, 0), (x, self.height))
         for y in range(0, self.height, self.cell):
             pygame.draw.line(self.screen, pygame.Color('black'), 
                 (0, y), (self.width, y))
-    def print(self):    
-        v=Virus()
-        for i in range(self.cells):
-            cell=v.get(i)    
-            y=cell[2]*self.cell
-            if cell[1]==0:
+    def print(self):                  
+        for i in self.v.get():
+            y=i[1]*self.cell
+            if i[0]==0:
                 x=self.width-self.cell
                 y-=self.cell
             else:    
-                x=cell[1]*self.cell-self.cell
-    
-            if cell[0]==1:
-                pygame.draw.rect(self.screen, pygame.Color('green'),
-                (x,y,self.cell_width,self.cell_height))
-            elif cell[0]==0:
-                pygame.draw.rect(self.screen, pygame.Color('white'),
-                (x,y,self.cell_width,self.cell_height))
-            elif cell[0]==2:
-                pygame.draw.rect(self.screen, pygame.Color('red'),
-                (x,y,self.cell_width,self.cell_height))
-            self.draw_lines()
-    def qwe(self,x,y):
-        y//=self.cell
-        x//=self.cell
-        
-        if y==0:
-            return x            
-        return (y*self.cell_width)+x
+                x=i[0]*self.cell-self.cell    
+            pygame.draw.rect(self.screen, pygame.Color('green'),
+            (x+1,y+1,self.cell-1,self.cell-1))
+        for i in self.b.get():
+            y=i[1]*self.cell
+            if i[0]==0:
+                x=self.width-self.cell
+                y-=self.cell
+            else:    
+                x=i[0]*self.cell-self.cell    
+            pygame.draw.rect(self.screen, pygame.Color('red'),
+            (x+1,y+1,self.cell-1,self.cell-1))   
+
+    def step(self):
+        if self.v.len()==0:
+            return
+        for i in self.v.get():
+            c=[]
+            c.append(i[0])
+            c.append(i[1])
+            self.v.step(i,self.cell_width,self.cell_height)
+            
+            # if self.v.search(c) and self.b.search(c):
+            #     self.v.edit(c)
+            
+            if random.randint(0,101)<=10:
+                self.v.edit(c)
+
+            
+           
     def run(self) :
         pygame.init()
         clock = pygame.time.Clock()
         pygame.display.set_caption('Game ')
-        self.screen.fill(pygame.Color('white'))
+        
+
         running = True
-        v=Virus()
+        
+        b=Bacterium()
         while running:
+            clock.tick(self.speed)
             for event in pygame.event.get():
-                clock.tick(self.speed)
+                
                 if event.type == QUIT:
                     running = False
                 elif event.type==pygame.MOUSEBUTTONDOWN:
                     x,y=pygame.mouse.get_pos()
-                    print (x,y)
-                    print((x//self.cell),(y//self.cell))
+                    print (x,y,'координаты')
+                    print((x//self.cell),(y//self.cell),'квадратик')
                     if event.button==1:
-                        v.edit(self.qwe(x,y)+1,1)
+                        s=[(x//self.cell)+1,y//self.cell]
+                        if self.b.search(s):    
+                            self.v.edit(s)
+                            print('зел')
                     elif event.button==3:
-                        v.edit(self.qwe(x,y)+1,2)  
+                        s=[(x//self.cell)+1,y//self.cell]
+                        if self.v.search(s):
+                            self.b.edit(s)
+                            print('крас')
                     elif event.button==2:
-                        v.edit(self.qwe(x,y)+1,0)     
-                self.draw_lines()
-                self.print()
-                pygame.display.flip()
+                        s=[(x//self.cell)+1,y//self.cell]    
+                        if not self.v.search(s):
+                            self.v.dell(s)
+                        elif not self.b.search(s):
+                            self.b.dell(s)
+                # elif event.type==pygame.KEYDOWN:
+                #     if event.key==K_p:
+                        
+            self.draw_lines()
+            self.print()
+            self.step()
+            pygame.display.flip()
                 
 
         pygame.quit()
