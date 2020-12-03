@@ -7,7 +7,7 @@ from simulation import Simulation
 
 class Window:
 
-    def __init__(self, width=640, height=480, cell=2, speed=10) :
+    def __init__(self, width=640, height=480, cell=2, speed=5) :
         self.width = width
         self.height = height
         self.cell = cell
@@ -36,69 +36,77 @@ class Window:
             else:    
                 x=f[0]*self.cell-self.cell    
             pygame.draw.rect(self.screen, pygame.Color(i.color()),
-            (x+1,y+1,self.cell-1,self.cell-1))
-        # for i in self.b.get():
-        #     y=f[1]*self.cell
-        #     if i[0]==0:
-        #         x=self.width-self.cell
-        #         y-=self.cell
-        #     else:    
-        #         x=f[0]*self.cell-self.cell    
-        #     pygame.draw.rect(self.screen, pygame.Color('red'),
-        #     (x+1,y+1,self.cell-1,self.cell-1))   
+            (x+1,y+1,self.cell-1,self.cell-1))   
 
-    # def step(self):
-    #     if self.v.len()==0:
-    #         return
-    #     for i in self.v.get():
-    #         c=[]
-    #         c.append(i[0])
-    #         c.append(i[1])
-    #         self.v.step(i,self.cell_width,self.cell_height)
-            
-            # if self.v.search(c) and self.b.search(c):
-            #     self.v.edit(c)
-            
-    #         if random.randint(0,101)<=10:
-    #             self.v.edit(c)
-
-            
+    def pause(self):
+        clock = pygame.time.Clock()
+        while True:
+            self.draw_lines()
+            self.print()
+            for event in pygame.event.get():
+                clock.tick(self.speed)
+                if event.type == QUIT:
+                    exit()
+                elif event.type==pygame.MOUSEBUTTONDOWN:
+                    x,y=pygame.mouse.get_pos()
+                    if event.button==1:                      
+                        self.s.add(Virus((x//self.cell)+1,y//self.cell,5))
+                        self.draw_lines()
+                        self.print()
+                    elif event.button==3:
+                        self.s.add(Bacterium((x//self.cell)+1,y//self.cell))
+                        self.draw_lines()
+                        self.print()
+                    elif event.button==2:
+                        s=[(x//self.cell)+1,y//self.cell]  
+                        i=self.s.search(s,False) 
+                        print (i)
+                        if i!=None: 
+                            self.s.remove(i)
+                        self.draw_lines()
+                        self.print()
+                elif event.type==pygame.KEYDOWN:
+                    if event.key==K_p:
+                        return
+                    elif event.key==K_SPACE:
+                        self.s.step(self.cell_width,self.cell_height)
+                        self.draw_lines()
+                        self.print()
+                        pygame.display.flip() 
+            pygame.display.flip()       
+               
            
     def run(self) :
         pygame.init()
         clock = pygame.time.Clock()
         pygame.display.set_caption('Game ')
         
-
-        running = True
-        
-        
-        while running:
+        while True:
             clock.tick(self.speed)
             for event in pygame.event.get():
                 
                 if event.type == QUIT:
-                    running = False
+                    exit()
                 elif event.type==pygame.MOUSEBUTTONDOWN:
                     x,y=pygame.mouse.get_pos()
-                    print (x,y,'координаты')
-                    print((x//self.cell),(y//self.cell),'квадратик')
-                    if event.button==1:
-                        s=[(x//self.cell)+1,y//self.cell]                            
-                        self.s.add(Virus((x//self.cell)+1,y//self.cell))
-                        print('зел')
+                    if event.button==1:                      
+                        self.s.add(Virus((x//self.cell)+1,y//self.cell,10))
                     elif event.button==3:
                         self.s.add(Bacterium((x//self.cell)+1,y//self.cell))
-                        print('крас')
                     elif event.button==2:
-                        s=[(x//self.cell)+1,y//self.cell]    
-                        
-                # elif event.type==pygame.KEYDOWN:
-                #     if event.key==K_p:
+                        s=[(x//self.cell)+1,y//self.cell]  
+                        i=self.s.search(s,False) 
+                        print (i)
+                        if i!=None: 
+                            self.s.remove(i)
+                elif event.type==pygame.KEYDOWN:
+                    if event.key==K_p:
+                        self.pause()
+                    
                         
             self.draw_lines()
             self.print()
-            # self.step()
+            self.s.step(self.cell_width,self.cell_height)
             pygame.display.flip()
                 
 
